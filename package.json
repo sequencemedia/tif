@@ -1,0 +1,37 @@
+{
+  "name": "@sequencemedia/tif",
+  "version": "0.0.0",
+  "main": "./index.mjs",
+  "type": "module",
+  "author": {
+    "name": "Jonathan Perry for Sequence Media Limited",
+    "email": "sequencemedia@sequencemedia.net",
+    "url": "http://sequencemedia.net"
+  },
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sequencemedia/tif.git"
+  },
+  "scripts": {
+    "start": "DEBUG=@sequencemedia/tif* node .",
+    "lint": "eslint . --ext .mjs,.cjs,.mts,.cts",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "debug": "^4.3.4",
+    "nconf": "^0.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/eslint-parser": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@sequencemedia/hooks": "^1.0.443",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0"
+  },
+  "imports": {
+    "#config": "./config/index.mjs"
+  }
+}
