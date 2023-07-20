@@ -52,8 +52,8 @@ watcher
   .on('changeDir', (...args) => {
     log('changeDir', ...args)
   })
-  .on('unlink', async (fileName, stats) => {
-    if (isTif(fileName)) log('unlink', { fileName, stats }, await getHashFor(fileName))
+  .on('unlink', (fileName) => {
+    if (isTif(fileName)) log('unlink', { fileName })
   })
   .on('unlinkDir', (...args) => {
     log('unlinkDir', ...args)
