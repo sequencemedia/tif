@@ -213,6 +213,8 @@ process
     process.exit(1)
   })
 
+log(process.pid)
+
 connect()
   .then(() => {
     chokidar
