@@ -93,6 +93,25 @@ async function disconnect () {
   if (readyState > DISCONNECTED) await mongoose.disconnect()
 }
 
+function watch () {
+  const watcher = (
+    chokidar
+      .watch(DIRECTORY, {
+        cwd: DIRECTORY,
+        ignored: '!*.(tif|TIF|tiff|TIFF)',
+        awaitWriteFinish: true
+      })
+  )
+
+  watcher
+    .on('add', handleChange)
+    .on('change', handleChange)
+    .on('unlink', handleRemove)
+    .on('ready', handleReady)
+
+  return watcher
+}
+
 const tifModel = getTifModel()
 
 const DISCONNECTED = 0
@@ -216,16 +235,5 @@ process
 log(process.pid)
 
 connect()
-  .then(() => {
-    chokidar
-      .watch(DIRECTORY, {
-        cwd: DIRECTORY,
-        ignored: '!*.(tif|TIF|tiff|TIFF)',
-        awaitWriteFinish: true
-      })
-      .on('add', handleChange)
-      .on('change', handleChange)
-      .on('unlink', handleRemove)
-      .on('ready', handleReady)
-  })
+  .then(watch)
   .catch(error)
