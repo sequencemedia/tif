@@ -77,9 +77,39 @@ async function handleReady () {
   )
 }
 
+async function connect () {
+  const {
+    readyState = DISCONNECTED
+  } = connection
+
+  if (readyState < CONNECTED) await mongoose.connect(`mongodb://${HOST}:${PORT}/${DB}`)
+}
+
+async function disconnect () {
+  const {
+    readyState = DISCONNECTED
+  } = connection
+
+  if (readyState > DISCONNECTED) await mongoose.disconnect()
+}
+
 const tifModel = getTifModel()
 
-mongoose.connection
+const DISCONNECTED = 0
+const CONNECTED = 1
+
+/*
+ *  const DISCONNECTED = 0
+ *  const CONNECTED = 1
+ *  const CONNECTING = 2
+ *  const DISCONNECTING = 3
+ */
+
+const {
+  connection = {}
+} = mongoose
+
+connection
   .on('open', () => {
     info('open')
   })
@@ -99,8 +129,91 @@ mongoose.connection
     warn('disconnected')
   })
 
-mongoose
-  .connect(`mongodb://${HOST}:${PORT}/${DB}`)
+process
+  .on('SIGHUP', async (signal) => {
+    const {
+      stdout
+    } = process
+
+    if ('clearLine' in stdout) {
+      stdout.clearLine()
+      stdout.cursorTo(0)
+    }
+
+    log(signal)
+
+    await disconnect()
+
+    process.exit(0)
+  })
+  .on('SIGINT', async (signal) => {
+    const {
+      stdout
+    } = process
+
+    if ('clearLine' in stdout) {
+      stdout.clearLine()
+      stdout.cursorTo(0)
+    }
+
+    log(signal)
+
+    await disconnect()
+
+    process.exit(0)
+  })
+  .on('SIGBREAK', async (signal) => {
+    log(signal)
+
+    await disconnect()
+
+    process.exit(0)
+  })
+  .on('SIGQUIT', async (signal) => {
+    log(signal)
+
+    await disconnect()
+
+    process.exit(0)
+  })
+  .on('SIGTERM', async (signal) => {
+    log(signal)
+
+    await disconnect()
+
+    process.exit(0)
+  })
+  .on('SIGPIPE', async (signal) => {
+    log(signal)
+
+    await disconnect()
+  })
+  .on('beforeExit', async (code) => {
+    log('beforeExit', code)
+
+    await disconnect()
+  })
+  .on('exit', async (code) => {
+    log('exit', code)
+
+    await disconnect()
+  })
+  .on('uncaughtException', async ({ message }) => {
+    log('uncaughtException', message)
+
+    await disconnect()
+
+    process.exit(1)
+  })
+  .on('unhandledRejection', async (reason, promise) => {
+    log('unhandledRejection', reason, promise)
+
+    await disconnect()
+
+    process.exit(1)
+  })
+
+connect()
   .then(() => {
     chokidar
       .watch(DIRECTORY, {

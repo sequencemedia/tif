@@ -2,6 +2,9 @@ import {
   resolve
 } from 'node:path'
 import args from './args.mjs'
+import {
+  DEFAULT_DIRECTORY
+} from './defaults.mjs'
 
 export const HOST = args.get('host')
 
@@ -13,6 +16,6 @@ export const DIRECTORY = (
   resolve(
     args.has('directory')
       ? args.get('directory')
-      : '.files'
+      : DEFAULT_DIRECTORY
   )
 )
