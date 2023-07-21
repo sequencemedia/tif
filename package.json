@@ -33,6 +33,7 @@
     "eslint-config-standard": "^17.1.0"
   },
   "imports": {
+    "#config/*": "./config/*.mjs",
     "#config": "./config/index.mjs",
     "#models/*": "./models/*.mjs",
     "#model-schemas/*": "./model-schemas/*.mjs"

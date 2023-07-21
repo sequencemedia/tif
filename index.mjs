@@ -14,12 +14,10 @@ import {
   constants
 } from 'node:fs'
 import {
-  HOST,
-  PORT,
-  DB,
   DIRECTORY
 } from '#config'
 import getTifModel from '#models/tif'
+import getMongoDBUri from '#config/get-mongodb-uri'
 
 const log = debug('@sequencemedia/tif')
 const info = debug('@sequencemedia/tif:info')
@@ -82,7 +80,7 @@ async function connect () {
     readyState = DISCONNECTED
   } = connection
 
-  if (readyState < CONNECTED) await mongoose.connect(`mongodb://${HOST}:${PORT}/${DB}`)
+  if (readyState < CONNECTED) await mongoose.connect(getMongoDBUri())
 }
 
 async function disconnect () {

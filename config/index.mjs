@@ -3,14 +3,60 @@ import {
 } from 'node:path'
 import args from './args.mjs'
 import {
+  DEFAULT_HOST,
+  DEFAULT_PORT,
+  DEFAULT_DB,
   DEFAULT_DIRECTORY
 } from './defaults.mjs'
 
-export const HOST = args.get('host')
+const {
+  env: {
+    NODE_ENV = 'development'
+  }
+} = process
 
-export const PORT = args.get('port')
+let USERNAME
+let PASSWORD
+let HOST
+let PORT
 
-export const DB = args.get('db')
+if (NODE_ENV === 'production') {
+  if (!args.has('username')) throw new Error('Parameter `username` is required')
+  USERNAME = args.get('username')
+
+  if (!args.has('password')) throw new Error('Parameter `password` is required')
+  PASSWORD = args.get('password')
+
+  if (!args.has('host')) throw new Error('Parameter `host` is required')
+  HOST = args.get('host')
+} else {
+  if (NODE_ENV === 'development') {
+    HOST = (
+      args.has('host')
+        ? args.get('host')
+        : DEFAULT_HOST
+    )
+
+    PORT = (
+      args.has('port')
+        ? args.get('port')
+        : DEFAULT_PORT
+    )
+  }
+}
+
+export {
+  USERNAME,
+  PASSWORD,
+  HOST,
+  PORT
+}
+
+export const DB = (
+  args.has('db')
+    ? args.get('db')
+    : DEFAULT_DB
+)
 
 export const DIRECTORY = (
   resolve(
