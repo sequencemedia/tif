@@ -90,7 +90,10 @@ async function disconnect () {
     readyState = DISCONNECTED
   } = connection
 
-  if (readyState > DISCONNECTED) await mongoose.disconnect()
+  if (
+    readyState === CONNECTED ||
+    readyState === CONNECTING
+  ) await mongoose.disconnect()
 }
 
 function watch () {
@@ -116,6 +119,7 @@ const tifModel = getTifModel()
 
 const DISCONNECTED = 0
 const CONNECTED = 1
+const CONNECTING = 2
 
 /*
  *  const DISCONNECTED = 0
