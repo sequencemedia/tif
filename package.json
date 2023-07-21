@@ -21,6 +21,7 @@
   "dependencies": {
     "chokidar": "^3.5.3",
     "debug": "^4.3.4",
+    "mongoose": "^7.4.0",
     "nconf": "^0.12.0"
   },
   "devDependencies": {
@@ -32,6 +33,8 @@
     "eslint-config-standard": "^17.1.0"
   },
   "imports": {
-    "#config": "./config/index.mjs"
+    "#config": "./config/index.mjs",
+    "#models/*": "./models/*.mjs",
+    "#model-schemas/*": "./model-schemas/*.mjs"
   }
 }

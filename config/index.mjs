@@ -1,8 +1,18 @@
-import path from 'node:path'
+import {
+  resolve
+} from 'node:path'
 import args from './args.mjs'
 
-export const DIR = path.resolve(
-  args.has('dir')
-    ? args.get('dir')
-    : '.files'
+export const HOST = args.get('host')
+
+export const PORT = args.get('port')
+
+export const DB = args.get('db')
+
+export const DIRECTORY = (
+  resolve(
+    args.has('directory')
+      ? args.get('directory')
+      : '.files'
+  )
 )

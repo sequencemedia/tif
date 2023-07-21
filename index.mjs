@@ -3,22 +3,42 @@ import {
   extname,
   join
 } from 'node:path'
+import mongoose from 'mongoose'
 import chokidar from 'chokidar'
 import crypto from 'node:crypto'
 import {
-  readFile
+  readFile,
+  access
 } from 'node:fs/promises'
 import {
-  DIR
+  constants
+} from 'node:fs'
+import {
+  HOST,
+  PORT,
+  DB,
+  DIRECTORY
 } from '#config'
+import getTifModel from '#models/tif'
 
 const log = debug('@sequencemedia/tif')
+const info = debug('@sequencemedia/tif:info')
+const warn = debug('@sequencemedia/tif:warn')
+const error = debug('@sequencemedia/tif:error')
 
-const isTif = (fileName) => /\.(?:tif|tiff)$/i.test(extname(fileName))
+async function hasTif (filePath) {
+  try {
+    await access(filePath, constants.R_OK)
+    return true
+  } catch {
+    return false
+  }
+}
 
-async function getHashFor (fileName) {
-  const filePath = join(DIR, fileName)
-  const fileBuffer = await readFile(filePath)
+const isTif = (filePath) => /\.(?:tif|tiff)$/i.test(extname(filePath))
+
+async function getHashFor (filePath) {
+  const fileBuffer = await readFile(join(DIRECTORY, filePath))
   const uint8Array = new Uint8Array(fileBuffer)
   return (
     crypto
@@ -28,36 +48,69 @@ async function getHashFor (fileName) {
   )
 }
 
-const watcher = (
-  chokidar
-    .watch(DIR, {
-      cwd: DIR,
-      ignored: '!*.(tif|TIF|tiff|TIFF)',
-      awaitWriteFinish: true
-    })
-)
+async function handleChange (filePath) {
+  log('change')
 
-watcher
-  .on('add', async (fileName, stats) => {
-    if (!isTif(fileName)) return
+  if (!isTif(filePath)) return
 
-    log('add', { fileName, stats }, await getHashFor(fileName))
+  await tifModel.updateOne({ directory: DIRECTORY, filePath }, { removed: false, hash: await getHashFor(filePath), $setOnInsert: { added: new Date() } }, { upsert: true })
+}
+
+async function handleRemove (filePath) {
+  log('remove')
+
+  if (!isTif(filePath)) return
+
+  await tifModel.updateOne({ directory: DIRECTORY, filePath }, { removed: true, $setOnInsert: { added: new Date() } }, { upsert: true })
+}
+
+async function handleReady () {
+  log('ready')
+
+  const tifs = await tifModel.find({})
+  await Promise.all(
+    tifs
+      .map(async ({ _id, directory, filePath }) => {
+        const has = await hasTif(join(directory, filePath))
+        await tifModel.updateOne({ _id }, { removed: !has })
+      })
+  )
+}
+
+const tifModel = getTifModel()
+
+mongoose.connection
+  .on('open', () => {
+    info('open')
   })
-  .on('addDir', (...args) => {
-    log('addDir', ...args)
+  .on('connected', () => {
+    info('connected')
   })
-  .on('change', async (fileName, stats) => {
-    if (isTif(fileName)) log('change', { fileName, stats }, await getHashFor(fileName))
+  .on('connecting', () => {
+    info('connecting')
   })
-  .on('changeDir', (...args) => {
-    log('changeDir', ...args)
+  .on('reconnected', () => {
+    warn('reconnected')
   })
-  .on('unlink', (fileName) => {
-    if (isTif(fileName)) log('unlink', { fileName })
+  .on('error', ({ message }) => {
+    error(`errror - "${message}"`)
   })
-  .on('unlinkDir', (...args) => {
-    log('unlinkDir', ...args)
+  .on('disconnected', () => {
+    warn('disconnected')
   })
-  .on('ready', () => {
-    log('ready')
+
+mongoose
+  .connect(`mongodb://${HOST}:${PORT}/${DB}`)
+  .then(() => {
+    chokidar
+      .watch(DIRECTORY, {
+        cwd: DIRECTORY,
+        ignored: '!*.(tif|TIF|tiff|TIFF)',
+        awaitWriteFinish: true
+      })
+      .on('add', handleChange)
+      .on('change', handleChange)
+      .on('unlink', handleRemove)
+      .on('ready', handleReady)
   })
+  .catch(error)
