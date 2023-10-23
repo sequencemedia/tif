@@ -22,7 +22,7 @@
     "chokidar": "^3.5.3",
     "debug": "^4.3.4",
     "mongoose": "^7.6.3",
-    "nconf": "^0.12.0"
+    "nconf": "^0.12.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
