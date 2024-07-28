@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "chokidar": "^3.6.0",
-    "debug": "^4.3.5",
+    "debug": "^4.3.6",
     "mongoose": "^8.5.1",
     "nconf": "^0.12.1"
   },
@@ -28,7 +28,7 @@
     "@babel/core": "^7.24.9",
     "@babel/preset-env": "^7.25.0",
     "@sequencemedia/eslint-config-standard": "^0.0.17",
-    "@sequencemedia/hooks": "^1.0.507",
+    "@sequencemedia/hooks": "^1.0.508",
     "eslint": "^9.8.0",
     "globals": "^15.8.0"
   },
