@@ -20,15 +20,15 @@
   },
   "dependencies": {
     "chokidar": "^3.6.0",
-    "debug": "^4.3.6",
+    "debug": "^4.3.7",
     "mongoose": "^8.6.1",
     "nconf": "^0.12.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.4",
-    "@sequencemedia/eslint-config-standard": "^0.0.55",
-    "@sequencemedia/hooks": "^1.0.546",
+    "@sequencemedia/eslint-config-standard": "^0.0.56",
+    "@sequencemedia/hooks": "^1.0.547",
     "eslint": "^9.9.1",
     "globals": "^15.9.0"
   },
