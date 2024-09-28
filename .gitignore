@@ -12,5 +12,8 @@
 # Deps
 .depsrc
 
+# Hooks
+.husky/hooks
+
 # Development
 .files
