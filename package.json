@@ -21,7 +21,7 @@
   "dependencies": {
     "chokidar": "^4.0.3",
     "debug": "^4.4.0",
-    "mongoose": "^8.14.0",
+    "mongoose": "^8.14.1",
     "nconf": "^0.13.0"
   },
   "devDependencies": {
