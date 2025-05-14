@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "chokidar": "^4.0.3",
-    "debug": "^4.4.0",
-    "mongoose": "^8.14.2",
+    "debug": "^4.4.1",
+    "mongoose": "^8.14.3",
     "nconf": "^0.13.0"
   },
   "devDependencies": {
