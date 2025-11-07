@@ -21,13 +21,13 @@
   "dependencies": {
     "chokidar": "^4.0.3",
     "debug": "^4.4.3",
-    "mongoose": "^8.19.2",
+    "mongoose": "^8.19.3",
     "nconf": "^0.13.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
-    "@sequencemedia/eslint-config-standard": "^0.2.101",
+    "@sequencemedia/eslint-config-standard": "^0.2.102",
     "eslint": "^9.39.1",
     "globals": "^16.5.0"
   },
