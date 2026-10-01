@@ -21,7 +21,7 @@
   "dependencies": {
     "chokidar": "^5.0.0",
     "debug": "^4.4.3",
-    "mongoose": "^9.10.2",
+    "mongoose": "^9.10.3",
     "nconf": "^0.13.0"
   },
   "devDependencies": {
@@ -29,7 +29,7 @@
     "@babel/preset-env": "7.29.7",
     "@sequencemedia/eslint-config-standard": "^0.2.127",
     "eslint": "9.38.0",
-    "globals": "^17.12.0"
+    "globals": "^17.13.0"
   },
   "imports": {
     "#config": "./config/index.mjs",
